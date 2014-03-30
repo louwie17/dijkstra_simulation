@@ -4,8 +4,6 @@
 #include "nl_table.h"
 #include "dll_basic.h"
 
-#define	MAXHOPS		4
-
 /*  This is an implementation of a very naive flooding algorithm in cnet.
     Whenever a new Network Layer packet requires delivery, it is
     transmitted on *all* physical links. To limit the combinatoric
@@ -121,7 +119,7 @@ int up_to_network(char *packet, size_t length, int arrived_on)
 
 EVENT_HANDLER(reboot_node)
 {
-    reboot_DLL();
+//    reboot_DLL();
     reboot_NL_table();
 
     CHECK(CNET_set_handler(EV_APPLICATIONREADY, down_to_network, 0));
