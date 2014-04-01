@@ -1,4 +1,5 @@
 #include <cnet.h>
+#include "Stack.h"
 
 #define	ALL_LINKS	(-1)
 
@@ -12,4 +13,7 @@ extern	void	inc_NL_packetexpected(CnetAddr address);
 extern	void	inc_NL_ackexpected(CnetAddr address);
 
 extern	int	NL_linksofminhops(CnetAddr address);
-extern	void	NL_savehopcount(CnetAddr address, int hops, int link);
+extern  void    NL_updateroutingtable(CnetAddr address, int hops, int link,
+        int nodenum);
+extern	void	NL_savehopcount(CnetAddr address, int hops, int link,
+        int total_cost, StackT nodes_visited);

@@ -1,43 +1,76 @@
 
 mapimage	 = "australia.gif"
+showcostperframe = true
 
 host Perth {
     x=80, y=290
-    link to Adelaide 
+    link to Adelaide {
+        costperframe = 5
+    }
 }
 host Canberra {
     x=440, y=320
-    link to Melbourne 
-    link to Sydney 
+    link to Melbourne {
+        costperframe = 4
+    }
+    link to Sydney {
+        costperframe = 3
+    }
 }
 host Melbourne {
     x=420, y=390
-    link to Canberra 
-    link to Sydney 
-    link to Hobart 
+    link to Canberra {
+        costperframe = 6
+    }
+    link to Sydney {
+        costperframe = 2
+    }
+    link to Hobart {
+        costperframe = 1
+    }
 }
 host Sydney {
     x=510, y=320
-    link to Canberra 
-    link to Melbourne 
-    link to Hobart 
-    link to Brisbane 
+    link to Canberra {
+        costperframe = 7
+    }
+    link to Melbourne {
+        costperframe = 2
+    }
+    link to Hobart {
+        costperframe = 3
+    }
+    link to Brisbane {
+        costperframe = 5
+    }
 }
 host Hobart {
     x=450, y=460
-    link to Melbourne 
-    link to Sydney 
+    link to Melbourne {
+        costperframe = 3
+    }
+    link to Sydney {
+        costperframe = 5
+    }
 }
 host Brisbane {
     x=520, y=220
-    link to Sydney 
+    link to Sydney {
+        costperframe = 2
+    }
 }
 host Adelaide {
     x=330, y=310
-    link to Melbourne 
-    link to Darwin 
+    link to Melbourne {
+        costperframe = 5
+    }
+    link to Darwin {
+        costperframe = 3
+    }
 }
 host Darwin {
     x=280, y=50
-    link to Adelaide 
+    link to Adelaide {
+        costperframe = 6
+    }
 }
