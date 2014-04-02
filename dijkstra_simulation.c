@@ -63,11 +63,7 @@ EVENT_HANDLER(update_tables)
     p.header = 'u';
     p.seqno = nodeinfo.nodenumber;
     p.src   = nodeinfo.address;
-    printf("Before memcpy\n");
-    print_array(p.node_table);
-    get_columns(p.node_table, 1);
-    printf("After memcpy\n");
-    print_array(p.node_table);
+    get_columns(p.node_table, 0);
     update_routing_tables(p);
     // call update_routing_tables with the created packet.
     CNET_start_timer(EV_TIMER1, (CnetTime)5000000, 0);
@@ -85,50 +81,22 @@ int up_to_network(char *packet, size_t length, int arrived_on_link)
     {
         NL_UPD      *p = (NL_UPD *)packet;
         printf("God a NL_UPD From: %4d\n",p->src);
-        //p->total_cost += linkinfo[arrived_on_link].costperframe;
-        //return 0;
-        printf("=============================\n");
-        printf("Link Cost: %4d\n", linkinfo[arrived_on_link].costperframe);
         if (p->node_table[nodeinfo.nodenumber] > p->link_cost)
             p->node_table[nodeinfo.nodenumber] = p->link_cost;
-        print_array(p->node_table);
         int updated = NL_updateroutingtable(p->src,
                 arrived_on_link, p->seqno, p->node_table);
         if (updated == 1)
         {
             // continue sending packet around
-            printf("Updated Table\n");
             p->seqno = nodeinfo.nodenumber;
             p->src = nodeinfo.address;
-            get_columns(p->node_table, 1);
+            get_columns(p->node_table, 0);
             update_routing_tables(*p);
         }
         else
             //discard packet;
         return 0;
     }
-    //else
-    //    NL_PACKET	*p = (NL_PACKET *)packet;
-
-    //++p->hopcount;			/* took 1 hop to get here */
-    //p->total_cost += linkinfo[arrived_on_link].costperframe;
-    // stack_push(p->nodes_visited, nodeinfo.nodenumber);
-    /*  IS THIS PACKET IS FOR ME? */
-    /*
-    if(p->dest == nodeinfo.address)
-
-        switch (p->kind) {
-            case NL_DATA :
-                break;
-            case NL_ACK :
-                break;
-        }
-        */
-    /* OTHERWISE, THIS PACKET IS FOR SOMEONE ELSE */
-    /*
-    else {
-        ;
-    }*/
     return(0);
 }
 
@@ -141,6 +109,6 @@ EVENT_HANDLER(reboot_node)
 
     CHECK(CNET_set_handler(EV_APPLICATIONREADY, down_to_network, 0));
     CHECK(CNET_set_handler(EV_TIMER1, update_tables, 0));
-    CNET_start_timer(EV_TIMER1, (CnetTime)1000, 0);
+    CNET_start_timer(EV_TIMER1, (CnetTime)100, 0);
     CNET_enable_application(ALLNODES);
 }
