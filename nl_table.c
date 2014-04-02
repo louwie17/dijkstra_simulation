@@ -45,6 +45,9 @@ int NL_updateroutingtable(CnetAddr address, int link, int last_node,
     {
         if (NL_routingtable[0][j] > (node_table[j] + NL_routingtable[0][address]))
         {
+            printf("Node: %4d Source: %4d Dest: %4d  %d->%d\n",nodeinfo.address,
+                    address, j, NL_routingtable[0][j], 
+                    node_table[j]+NL_routingtable[0][address]);
             NL_routingtable[1][j] = link;
             NL_routingtable[0][j] = node_table[j] + NL_routingtable[0][address];
             updated = 1;

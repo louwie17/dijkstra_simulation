@@ -80,8 +80,8 @@ int up_to_network(char *packet, size_t length, int arrived_on_link)
     if (packet[0] == 'u')
     {
         NL_UPD      *p = (NL_UPD *)packet;
-        printf("God a NL_UPD From: %4d\n",p->src);
-        if (p->node_table[nodeinfo.nodenumber] > p->link_cost)
+        printf("Got a NL_UPD From: %4d\n",p->src);
+        if (p->node_table[nodeinfo.nodenumber] != p->link_cost)
             p->node_table[nodeinfo.nodenumber] = p->link_cost;
         int updated = NL_updateroutingtable(p->src,
                 arrived_on_link, p->seqno, p->node_table);
