@@ -31,6 +31,7 @@ typedef struct {
     int         seqno;
     int         link_cost;
     int         node_table[NNODES+1];
+    int         full_table[NNODES+1][NNODES+1];
 } NL_UPD;
 
 #define PACKET_HEADER_SIZE  (sizeof(NL_PACKET) - MAX_MESSAGE_SIZE)
@@ -47,12 +48,16 @@ static void update_routing_tables(NL_UPD packet)
         CHECK(down_to_datalink(link, (char*)&packet, sizeof(NL_UPD)));
     }
 }
-void print_array(int node_table[NNODES+1])
+void print_array(int node_table[NNODES+1][NNODES+1])
 {
-    int j;
+    int i,j;
     printf("Node table \n");
-    for (j = 0; j< (NNODES+1); j++)
-        printf("%4d\n", node_table[j]);
+    for (i = 0; i< (NNODES+1); i++)
+    {
+        for (j = 0; j < (NNODES+1); j++)
+            printf("%8d", node_table[i][j]);
+        printf("\n");
+    }
 }
 
 EVENT_HANDLER(update_tables)
@@ -64,6 +69,7 @@ EVENT_HANDLER(update_tables)
     p.seqno = nodeinfo.nodenumber;
     p.src   = nodeinfo.address;
     get_columns(p.node_table, 0);
+    get_full_table(p.full_table);
     update_routing_tables(p);
     // call update_routing_tables with the created packet.
     CNET_start_timer(EV_TIMER1, (CnetTime)5000000, 0);
@@ -83,14 +89,20 @@ int up_to_network(char *packet, size_t length, int arrived_on_link)
         printf("Got a NL_UPD From: %4d\n",p->src);
         if (p->node_table[nodeinfo.nodenumber] != p->link_cost)
             p->node_table[nodeinfo.nodenumber] = p->link_cost;
+        // full_table[from node num][to node num]
+        p->full_table[p->src][nodeinfo.nodenumber] = p->link_cost;
+        p->full_table[nodeinfo.nodenumber][p->src] = 
+            linkinfo[arrived_on_link].costperframe;
+        int updated_full_table = NL_updatefulltable(p->full_table);
         int updated = NL_updateroutingtable(p->src,
                 arrived_on_link, p->seqno, p->node_table);
-        if (updated == 1)
+        if (updated == 1 || updated_full_table == 1)
         {
             // continue sending packet around
             p->seqno = nodeinfo.nodenumber;
             p->src = nodeinfo.address;
             get_columns(p->node_table, 0);
+            get_full_table(p->full_table);
             update_routing_tables(*p);
         }
         else

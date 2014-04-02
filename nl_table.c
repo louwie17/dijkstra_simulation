@@ -19,6 +19,7 @@ typedef struct {
 static	NLTABLE	*NL_table	= NULL;
 static	int	NL_table_size	= 0;
 
+static int NL_fullroutingtable[NNODES+1][NNODES+1];
 static int NL_routingtable[2][NNODES+1];
 // -----------------------------------------------------------------
 
@@ -27,6 +28,15 @@ static int NL_routingtable[2][NNODES+1];
 void get_columns(int* table, int column)
 {
     memcpy(&table[0], &NL_routingtable[column], sizeof(NL_routingtable[0]));
+}
+
+void get_full_table(int table[NNODE+1][NNODE+1])
+{
+    int i;
+    for (i = 0; i < (NNODES+1); i++)
+    {
+        memcpy(&table[i], &NL_fullroutingtable[i], sizeof(NL_fullroutingtable[0]));
+    }
 }
 // -----------------------------------------------------------------
 
@@ -56,6 +66,26 @@ int NL_updateroutingtable(CnetAddr address, int link, int last_node,
     return updated;
 }
 
+int NL_updatefulltable(int full_table[NNODE+1][NNODE+1])
+{
+    int i,j;
+    int updated = 0;
+    for (i = 0; i < (NNODE+1); i++)
+    {
+        for (j = 0; j < (NNODE+1); j++)
+        {
+            if (full_table[i][j] == MAX_INT)
+                continue;
+            if (full_table[i][j] != NL_fullroutingtable[i][j])
+            {
+                NL_fullroutingtable[i][j] = full_table[i][j];
+                updated = 1;
+            }
+        }
+    }
+    return updated;
+}
+
 // -----------------------------------------------------------------
 
 static EVENT_HANDLER(show_NL_table)
@@ -71,19 +101,35 @@ static EVENT_HANDLER(show_NL_table)
         }
         printf("\n");
     }
+    printf("Full table    from: \n");
+    for (i = 0; i < (NNODES+1); i++)
+    {
+        for (j = 0; j < (NNODES+1); j++)
+        {
+            printf("%9d", NL_fullroutingtable[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 void reboot_NL_table(void)
 {
     CHECK(CNET_set_handler(EV_DEBUG0, show_NL_table, 0));
     CHECK(CNET_set_debug_string(EV_DEBUG0, "NL info"));
-    //int max = 10000;
-    //memset(NL_routingtable, , sizeof(NL_routingtable[0][0]) * 2 * (NNODES+1));
     int i,j;
     for (i = 0; i < 2; i++)
     {
         for (j = 0; j < (NNODES+1); j++)
             NL_routingtable[i][j] = MAX_INT;
+    }
+    for (i = 0; i < (NNODES+1); i++)
+    {
+        for (j = 0; j < (NNODES+1); j++)
+        {
+            NL_fullroutingtable[i][j] = MAX_INT;
+            printf("%8d", NL_fullroutingtable[i][j]);
+        }
+        printf("\n");
     }
     //NL_routingtable
     NL_routingtable[0][nodeinfo.nodenumber] = 0;
