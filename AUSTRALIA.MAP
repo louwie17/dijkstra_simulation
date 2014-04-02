@@ -28,6 +28,9 @@ host Melbourne {
     link to Hobart {
         costperframe = 1
     }
+    link to Adelaide {
+        costperframe = 2
+    }
 }
 host Sydney {
     x=510, y=320
@@ -66,6 +69,9 @@ host Adelaide {
     }
     link to Darwin {
         costperframe = 3
+    }
+    link to Perth {
+        costperframe = 7
     }
 }
 host Darwin {
