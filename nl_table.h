@@ -9,6 +9,7 @@ extern	void	reboot_NL_table(void);
 extern  void get_columns(int* table, int column);
 extern  void get_full_table(int table[NNODE+1][NNODE+1]);
 
+extern  int NL_path(int source, int destination);
 extern  int NL_link(CnetAddr destination);
 /*
 extern	int	NL_ackexpected(CnetAddr address);

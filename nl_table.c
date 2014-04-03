@@ -5,6 +5,7 @@
 
 #include "Stack.h"
 #include "nl_table.h"
+#include "dijkstra.h"
 
 // ---- A SIMPLE NETWORK LAYER SEQUENCE TABLE AS AN ABSTRACT DATA TYPE ----
 #define NNODES      7
@@ -39,6 +40,15 @@ void get_full_table(int table[NNODE+1][NNODE+1])
     }
 }
 // -----------------------------------------------------------------
+int NL_path(int source, int destination)
+{
+    int precede[8];
+    int pd;
+    dijkstra(NL_routingtable, destination,source, &pd, precede);
+    print_path(destination, source, precede);
+
+    return 1;
+}
 
 int NL_link(CnetAddr destination)
 {

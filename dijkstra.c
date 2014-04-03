@@ -1,39 +1,67 @@
 #include <cnet.h>
 #include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-int minDistance(int Dist[], bool sptSet[])
+#define INF 10000
+#define NUM_OF_NODES 8
+#define MEMBER 1
+#define NOMEMBER 0
+
+void dijkstra(int weight[][NUM_OF_NODES],int s,int t,int *pd, int precede[])
 {
-    int min = INT_MAX, min_index;
-
-    for (int v = 0; v < V; v++)
-        if (sptSet[v] == false && dist[v] <= min)
-            min = dist[v], min_index = v;
-
-    return min_index;
-}
-
-
-void dijkstra(int graph, int src)
-{
-    int dist[V];
-
-    bool sptSet[V];
-
-    for (int i = 0; i < V; i++)
-        dist[i] = INT_MAX, sptSet[i] = false;
-
-    dist[src] = 0;
-
-    for (int count = 0; count < V - 1; count++)
+    int distance[NUM_OF_NODES],perm[NUM_OF_NODES],prev[NUM_OF_NODES];
+    int current,k,dc;
+    int smalldist,newdist;
+    for (int i = 0; i < NUM_OF_NODES; i++)
     {
-        int u = minDistance(dist, sptSet);
-
-        sptSet[u] = true;
-
-        for (int v = 0; v < V; v++)
-            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX 
-                    && dist[u]+graph[u][v] < dist[v])
-                dist[v] = dist[u] + graph[u][v];
+        perm[i] = NOMEMBER;
+        distance[i] = INF;
+        prev[i] = -1;
     }
+
+    perm[s] = MEMBER;
+    distance[s] = 0;
+    current = s;
+
+    while(current != t)
+    {
+        smalldist = INF;
+        dc = distance[current];
+        for (int i = 0; i < NUM_OF_NODES; i++)
+        {
+            if (perm[i] == NOMEMBER)
+            {
+                newdist = dc + weight[current][i];
+                if (newdist < distance[i])
+                {
+                    distance[i] = newdist; // Count the updated distance
+                    precede[i] = current;
+
+                }
+                if (distance[i] < smalldist)
+                {
+                    smalldist = distance[i];
+                    k = i;
+                }
+
+            }
+        }//end of for and if
+
+        current = k;
+        perm[current] = MEMBER;
+
+    }//end while
+    *pd = distance[t];
+} //end of function
+
+void print_path(int s, int t, int precede[]) {
+    int current = t;
+
+    while (current != s) {
+        printf("%d -> ", current);
+        current = precede[current];
+    }
+
+    printf("%d\n",current);
 }

@@ -6,6 +6,7 @@
 #include "Stack.h"
 #include "nl_table.h"
 #include "dll_basic.h"
+#include "dijkstra.h"
 
 #define MAXHOPS     4
 #define NNODES      7
@@ -79,6 +80,7 @@ EVENT_HANDLER(down_to_network)
     CHECK(CNET_disable_application(p.dest));
     p.src   = nodeinfo.address;
     int link = NL_link(p.dest);
+    NL_path(p.src, p.dest);
     // Send packet to the datalink layer
     printf("Send Packet on %8d\n", link);
     if (link <= nodeinfo.nodenumber)

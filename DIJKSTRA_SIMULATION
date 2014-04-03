@@ -2,6 +2,6 @@ messagerate      = 200ms,
 propagationdelay = 100ms,
 bandwidth	 = 56Kbps,
 
-compile		 = "dijkstra_simulation.c dll_basic.c nl_table.c Stack.c"
+compile		 = "dijkstra_simulation.c dll_basic.c nl_table.c Stack.c dijkstra.c"
 
 #include "AUSTRALIA.MAP"
