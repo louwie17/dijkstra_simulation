@@ -80,13 +80,11 @@ EVENT_HANDLER(down_to_network)
     p.src   = nodeinfo.address;
     int link = NL_link(p.dest);
     // Send packet to the datalink layer
-    printf("Send Packet on %8d\n", link);
     if (link <= nodeinfo.nodenumber)
         CHECK(down_to_datalink(link, (char *)&p, PACKET_SIZE(p)));
     else
     {
         int l = ((int)rand() % nodeinfo.nlinks)+1;
-        printf("SENDING links num: %4d\n", l);
         //size_t length = PACKET_SIZE(p);
         //CHECK(CNET_write_application(p.msg, &length));
         //CHECK(CNET_write_physical_reliable(l, (char *)&p, &length));

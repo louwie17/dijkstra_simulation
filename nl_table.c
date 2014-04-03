@@ -132,9 +132,7 @@ void reboot_NL_table(void)
         for (j = 0; j < (NNODES+1); j++)
         {
             NL_fullroutingtable[i][j] = MAX_INT;
-            printf("%8d", NL_fullroutingtable[i][j]);
         }
-        printf("\n");
     }
     //NL_routingtable
     NL_routingtable[0][nodeinfo.nodenumber] = 0;
