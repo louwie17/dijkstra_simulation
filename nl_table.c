@@ -21,9 +21,6 @@ static	int	NL_table_size	= 0;
 
 static int NL_fullroutingtable[NNODES+1][NNODES+1];
 static int NL_routingtable[2][NNODES+1];
-// -----------------------------------------------------------------
-
-//  GIVEN AN ADDRESS, LOCATE OR CREATE ITS ENTRY IN THE NL_table
 
 void get_columns(int* table, int column)
 {
@@ -38,7 +35,6 @@ void get_full_table(int table[NNODE+1][NNODE+1])
         memcpy(&table[i], &NL_fullroutingtable[i], sizeof(NL_fullroutingtable[0]));
     }
 }
-// -----------------------------------------------------------------
 
 int NL_link(CnetAddr destination)
 {
@@ -60,9 +56,6 @@ int NL_updateroutingtable(CnetAddr address, int link, int last_node,
     {
         if (NL_routingtable[0][j] > (node_table[j] + NL_routingtable[0][address]))
         {
-            //printf("Node: %4d Source: %4d Dest: %4d  %d->%d\n",nodeinfo.address,
-            //        address, j, NL_routingtable[0][j], 
-            //        node_table[j]+NL_routingtable[0][address]);
             NL_routingtable[1][j] = link;
             NL_routingtable[0][j] = node_table[j] + NL_routingtable[0][address];
             updated = 1;
@@ -90,8 +83,6 @@ int NL_updatefulltable(int full_table[NNODE+1][NNODE+1])
     }
     return updated;
 }
-
-// -----------------------------------------------------------------
 
 static EVENT_HANDLER(show_NL_table)
 {
@@ -134,7 +125,6 @@ void reboot_NL_table(void)
             NL_fullroutingtable[i][j] = MAX_INT;
         }
     }
-    //NL_routingtable
     NL_routingtable[0][nodeinfo.nodenumber] = 0;
     NL_routingtable[1][nodeinfo.nodenumber] = nodeinfo.nodenumber;
     NL_table		= calloc(1, sizeof(NLTABLE));

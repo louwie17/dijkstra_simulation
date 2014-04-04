@@ -85,9 +85,6 @@ EVENT_HANDLER(down_to_network)
     else
     {
         int l = ((int)rand() % nodeinfo.nlinks)+1;
-        //size_t length = PACKET_SIZE(p);
-        //CHECK(CNET_write_application(p.msg, &length));
-        //CHECK(CNET_write_physical_reliable(l, (char *)&p, &length));
         CHECK(down_to_datalink(l, (char *)&p, PACKET_SIZE(p)));
     }
 }
@@ -105,7 +102,6 @@ int up_to_network(char *packet, size_t length, int arrived_on_link)
         {
             length = p->length;
             CHECK(CNET_write_application(p->msg, &length));
-            //CHECK(CNET_enable_application(p->dest));
         }
         else
         {
@@ -121,7 +117,6 @@ int up_to_network(char *packet, size_t length, int arrived_on_link)
         NL_UPD      *p = (NL_UPD *)packet;
         if (p->node_table[nodeinfo.nodenumber] != p->link_cost)
             p->node_table[nodeinfo.nodenumber] = p->link_cost;
-        // full_table[from node num][to node num]
         p->full_table[p->src][nodeinfo.nodenumber] = p->link_cost;
         p->full_table[nodeinfo.nodenumber][p->src] = 
             linkinfo[arrived_on_link].costperframe;
